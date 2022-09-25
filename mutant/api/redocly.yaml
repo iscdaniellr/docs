@@ -1,0 +1,10 @@
+organization: iscdaniellr
+apis:
+  main@v1:
+    root: ./openapi/openapi.yaml
+lint: []
+features.mockServer: []
+region: []
+resolve: []
+features.openapi: []
+registry: []
