@@ -1,0 +1,119 @@
+---
+openapi: 3.0.2
+info:
+  title: Mutant
+  version: 1.0.0
+  description: Challenge Mutantes
+  contact:
+    name: Daniel López Rosas
+    email: daniel.lrosas@outlook.com
+paths:
+  /api/mutant:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DnaWrapper'
+            examples:
+              adn wrapper:
+                value:
+                  dna:
+                  - ATGCGA
+                  - CAGTGC
+                  - TTATGT
+                  - AGAAGG
+                  - CCCCTA
+                  - TCACTG
+        required: true
+      tags: []
+      responses:
+        "200":
+          description: Recibirá esta respuesta cuando el ADN analizado corresponde
+            a un mutante.
+        "403":
+          description: Recibirá esta respuesta cuando el ADN analizado NO corresponde
+            a un mutante.
+        "500":
+          description: Recibirá esta respuesta cuando ocurra un error durante la invocación
+            al servicio.
+      deprecated: false
+      summary: /api/mutant
+      description: Verifica si el ADN corresponde a un mutante o no y guarda un registro
+        unico por cada ADN analizado.
+  /api/stats:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DnaStats'
+              examples:
+                stats:
+                  value:
+                    count_mutant_dna: 40
+                    count_human_dna: 100
+                    ratio: 0.4
+          description: ""
+        "500":
+          description: Recibirá esta respuesta cuando ocurra un error durante la invocación
+            al servicio.
+      summary: /api/stats
+      description: Obtiene las estadisticas de los ADN's analizados.
+components:
+  schemas:
+    DnaWrapper:
+      description: ""
+      required:
+      - dna
+      type: object
+      properties:
+        dna:
+          description: "Debe tener una longitud NxN y contener solo los siguiente\
+            \ caracteres: A,T,C,G."
+          type: array
+          items:
+            type: string
+          example: |-
+            {
+                "dna": [
+                    "ATGCGA",
+                    "CAGTGC",
+                    "TTATGT",
+                    "AGAAGG",
+                    "CCCCTA",
+                    "TCACTG"
+                ]
+            }
+      example:
+        dna:
+        - ATGCGA
+        - CAGTGC
+        - TTATGT
+        - AGAAGG
+        - CCCCTA
+        - TCACTG
+    DnaStats:
+      title: Root Type for DnaStats
+      description: ""
+      required:
+      - count_human_dna
+      - count_mutant_dna
+      - ratio
+      type: object
+      properties:
+        count_mutant_dna:
+          description: Cantidad de ADN mutante detectado.
+          type: integer
+        count_human_dna:
+          description: Cantidad de ADN humano detectado (sin mutaciones).
+          type: integer
+        ratio:
+          format: float
+          description: mutants/humans
+          type: number
+      example:
+        count_mutant_dna: 40
+        count_human_dna: 100
+        ratio: 0.4
